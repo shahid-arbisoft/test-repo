@@ -1,2 +1,171 @@
-<h1>This is some HTML code</h1>
-<h2>THis is 2nd Heading.!</h2>
+## mako
+<%page expression_filter="h"/>
+<%inherit file="/main.html"/>
+<%!
+from django.urls import reverse
+from django.utils.translation import ugettext as _
+%>
+
+<div class="application-hub">
+    <div class="container-bs">
+        <div class="header-text">
+            <div class="title">
+                <h2>
+                    ${_("Welcome to the Omni in a Box application!")}
+                </h2>
+            </div>
+            <h2 class="pt-0 pt-md-4">
+                ${_("Congratulations! You have completed all of the requirements and submitted your application.")}
+            </h2>
+            <p>
+                ${_(
+                "You can view the application requirements and track your progress on this page. After you submit your "
+                "written application, the Omni in a Box team will review your application."
+                )}
+            </p>
+            <p>
+                <strong>${_("Please note:")}</strong>
+                ${_(
+                    "In order to be eligible for the program, you must be a Saudi National between the ages of 21 - "
+                    "65 and have a high school diploma or GED."
+                )}
+            </p>
+        </div>
+
+        <div class="progress-indicator">
+            <ul class="step-progressbar">
+                <li id="application_progressbar_step_1" class="progressbar-step progressbar-step--complete">
+                    <span>${_("WRITTEN APPLICATION")}</span>
+                </li>
+                <li id="application_progressbar_step_2" class="progressbar-step progressbar-step--active">
+                    <span>${_("PREREQUISITE COURSES")}</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="instruction-text">
+            <h3>${_("Get started on the prerequisite Omnipreneurship courses in order to complete your application!")}</h3>
+        </div>
+
+        <ul class="application-steps-list">
+            <li class="list-item">
+                <div class="item-body">
+                    <div class="overview">
+                        <div class="details">
+                            <h2>
+                                ${_("Written Application")}
+                            </h2>
+                            <p>
+                                ${_(
+                                    "This written application will help us get to know you! Before you start, make sure you have everything "
+                                    "you need to answer questions about your background and interest in the program. A resume is recommended and a "
+                                    "cover letter is optional."
+                                )}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="completion-indicator">
+                        <div class="custom-checkbox lg">
+                            <input class="default-checkbox"
+                                type="checkbox" disabled
+                                ${'checked' if user_application_hub.is_written_application_completed else ''}>
+                            <label for="default-checkbox-3"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-footer">
+                    <% disabled = 'disabled' if user_application_hub.is_written_application_completed else '' %>
+                    <a class="button aqua-blue ${disabled}" href="${reverse('application_contact')}" ${disabled}>
+                        ${_("Start Application")}
+                    </a>
+                </div>
+            </li>
+
+            <li class="list-item">
+                <div class="item-body">
+                    <div class="overview">
+                        <div class="details">
+                            <h2>${_("Prerequisite Courses")}</h2>
+                            <p>
+                                ${_("In order to complete your application requirements, you will have to ")} 
+                                <strong class="fw-600">${_(" complete both Omnipreneurship courses. ")}</strong>
+                                ${_("However, you will have to enroll in and ")}
+                                <strong class="fw-600">${_(" complete Omnipreneurship 101 first. ")}</strong>
+                            </p>
+                            <p>
+                                ${_(
+                                    "Once you have completed Omnipreneurship 101 and received a passing grade, "
+                                    "the Omnipreneurship 102 course will be unlocked."
+                                )}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="completion-indicator">
+                        <div class="custom-checkbox lg">
+                            <input class="default-checkbox"
+                                type="checkbox" disabled
+                                ${'checked' if user_application_hub.is_prerequisite_courses_passed else ''}>
+                            <label for="default-checkbox-2"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-block">
+                    <div class="pre-req-courses">
+                        <div class="courses">
+                            <ul class="courses-list">
+                                % for course in pre_req_courses:
+                                    <li class="courses-list-item">
+                                        <%include file="/course.html" args="course=course, course_info=True"/>
+                                    </li>
+                                % endfor
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="business-line-courses">
+            <h2 class="pt-4">${_("Business Line Courses (Optional)")}</h2>
+            <p>
+                ${_(
+                    "While your application is under review, you can get started on the recommended courses and training for your "
+                    "chosen Business Line. Your applicaion will not be affected by your performance in these courses."
+                )}
+            </p>
+        </div>
+
+        <ul class="application-steps-list">
+            <li class="list-item">
+                <div class="item-body">
+                    <div class="overview">
+                        <div class="details"><h2>${_("Dukan Courses")}</h2>
+                            <p>
+                                ${_(
+                                    "These are the recommended courses based on your business line selection of Dukan. "
+                                    "These courses are not required for the application, but suggested for you to get started on for your job training."
+                                )}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-block">
+                    <div class="pre-req-courses">
+                        <div class="courses">
+                            <ul class="courses-list">
+                                % for course in pre_req_courses:
+                                    <li class="courses-list-item">
+                                        <%include file="/course.html" args="course=course, course_info=True"/>
+                                    </li>
+                                % endfor
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</div>
